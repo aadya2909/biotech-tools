@@ -1,0 +1,9 @@
+# Python cache
+__pycache__/
+*.pyc
+
+# Data files (optional)
+data/*.fasta
+
+# VS Code settings (optional)
+.vscode/
