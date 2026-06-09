@@ -1,37 +1,56 @@
 # biotech-tools
 
-Python scripts for biological sequence analysis.
-Built as part of my self-directed learning in computational biology.
+A Python-based bioinformatics pipeline for gene sequence analysis, 
+mutation detection, and protein translation using real NCBI data.
 
-## Scripts
+## What this project does
 
-### p53_analyzer.py
-Analyzes a p53 tumor suppressor gene fragment.
-- Calculates GC content
-- Counts nucleotides
-- Detects start codon position
-- Scans first 3 codons
+I built this to learn how computational biology actually works — 
+not just theory. Starting from raw gene names, the pipeline fetches 
+real sequences from NCBI, analyzes nucleotide composition, detects 
+known cancer mutations at the amino acid level, and translates DNA 
+to protein. Everything here is built and understood from scratch.
 
+## Project structure
 
-### kras_analyzer.py
+biotech-tools/
+├── data/                # FASTA files fetched from NCBI
+├── scripts/
+│   ├── fetch_gene.py    # Fetches any gene from NCBI by name
+│   ├── analyze.py       # Full sequence analysis + protein translation
+│   ├── p53_analyzer.py  # TP53 tumor suppressor gene analysis
+│   └── kras_analyzer.py # KRAS oncogene mutation detection
+├── src/ncbi/
+│   ├── fetch.py         # NCBI fetch functions
+│   └── search.py        # NCBI search functions
+└── requirements.txt
 
-KRAS is one of the most frequently mutated oncogenes in human cancer. 
-This script compares a reference KRAS sequence against a patient sequence 
-to identify mutations at the nucleotide, codon, and amino acid level.
+## Installation
 
-**What it does:**
-- Detects single nucleotide variants (SNVs) with exact position tracking
-- Calculates affected codon and translates to amino acid change
-- Flags known oncogenic hotspot mutations: G12D, G12V, G12C
-- Provides clinical context — KRAS G12D is present in ~36% of 
-  pancreatic cancers and ~40% of colorectal cancers
+pip install -r requirements.txt
 
-**Why it matters:**
-KRAS mutations are a major focus of targeted cancer therapy research. 
-Identifying which specific mutation is present directly influences 
-treatment decisions in clinical oncology.
+## Usage
 
-**Test sequences:** Based on the KRAS oncogene (codons 1–17 fragment).
+Fetch any gene from NCBI:
+python -m scripts.fetch_gene
+
+Run full sequence analysis:
+python -m scripts.analyze
+
+Run KRAS cancer mutation analysis:
+python -m scripts.kras_analyzer
+
+## Example output
+
+Gene: PZ086170.1
+Length: 123 bp
+Nucleotide counts — A: 23, T: 20, G: 35, C: 45
+GC Content: 65.04%
+Start codons found: 2 at positions [69, 100]
+Protein: WVDSTPPPGTRVRAVAIYKQSQHMTEVVRRCPHHERCSDSD
 
 ## Author
-Aadya | Biotechnology student | Building at the intersection of biology and code
+
+Aadya | BSc Biotechnology student  
+Building at the intersection of biology and code  
+github.com/aadya2909
