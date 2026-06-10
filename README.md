@@ -1,63 +1,122 @@
 # biotech-tools
 
-A Python-based bioinformatics pipeline for gene sequence analysis, 
-mutation detection, and protein translation using real NCBI data.
+A Python-based bioinformatics pipeline for gene sequence analysis, protein translation, and basic ORF detection using real NCBI data.
 
-## What this project does
+---
 
-I built this to learn how computational biology actually works — 
-not just theory. Starting from raw gene names, the pipeline fetches 
-real sequences from NCBI, analyzes nucleotide composition, detects 
-known cancer mutations at the amino acid level, and translates DNA 
-to protein. Everything here is built and understood from scratch.
+## 🧬 What this project does
 
-## Project structure
+This project explores how computational biology works in practice — not just theory.
+
+Starting from a gene name (e.g. TP53, BRCA1), the pipeline:
+
+* Fetches real nucleotide sequences from NCBI
+* Filters for biologically relevant RefSeq (NM_) mRNA sequences
+* Analyzes nucleotide composition (A, T, G, C)
+* Calculates GC content
+* Detects start and stop codons
+* Identifies the longest open reading frame (ORF)
+* Translates DNA into a realistic protein sequence
+
+Everything here is built step-by-step while learning both Python and bioinformatics concepts.
+
+---
+
+## ⚙️ Features
+
+* 🔍 Gene search using NCBI Entrez API
+* 🧬 Automatic RefSeq (NM_) filtering
+* 📊 Sequence analysis (length, GC%, nucleotide counts)
+* 🧪 Start/stop codon detection
+* 🧠 Longest ORF detection (biologically meaningful protein)
+* 💻 CLI support for single and multiple genes
+* 💾 FASTA file export
+
+---
+
+## 📁 Project structure
 
 biotech-tools/
-├── data/                # FASTA files fetched from NCBI
+├── data/                  # Saved FASTA sequences
 ├── scripts/
-│   ├── fetch_gene.py    # Fetches any gene from NCBI by name
-│   ├── analyze.py       # Full sequence analysis + protein translation
-│   ├── p53_analyzer.py  # TP53 tumor suppressor gene analysis
-│   └── kras_analyzer.py # KRAS oncogene mutation detection
+│   ├── cli.py             # Main CLI tool
+│   ├── fetch_gene.py      # Basic gene fetch script
+│   ├── analyze.py         # Sequence analysis + ORF translation
+│   ├── p53_analyzer.py    # TP53-specific analysis
+│   └── kras_analyzer.py   # KRAS mutation analysis
 ├── src/ncbi/
-│   ├── fetch.py         # NCBI fetch functions
-│   └── search.py        # NCBI search functions
+│   ├── fetch.py           # Fetch sequences from NCBI
+│   └── search.py          # Search gene IDs from NCBI
 └── requirements.txt
 
-## Installation
+---
 
+## 🛠️ Installation
+
+```bash
 pip install -r requirements.txt
+```
 
-## Usage
+---
 
-Fetch any gene from NCBI:
-python -m scripts.fetch_gene
+## 🚀 Usage
 
-Run full sequence analysis:
-python -m scripts.analyze
+### CLI (recommended)
 
-Run KRAS cancer mutation analysis:
-python -m scripts.kras_analyzer
+Fetch and analyze genes:
 
-## CLI Usage
-
-Fetch and analyze any gene in one command:
+```bash
 python -m scripts.cli --gene TP53
-python -m scripts.cli --gene BRCA1
-python -m scripts.cli --gene KRAS
+python -m scripts.cli --genes TP53 KRAS BRCA1
+```
 
-## Example output
+---
 
-Gene: PZ086170.1
-Length: 123 bp
-Nucleotide counts — A: 23, T: 20, G: 35, C: 45
-GC Content: 65.04%
-Start codons found: 2 at positions [69, 100]
-Protein: WVDSTPPPGTRVRAVAIYKQSQHMTEVVRRCPHHERCSDSD
+### Basic scripts
+
+Fetch gene manually:
+
+```bash
+python -m scripts.fetch_gene
+```
+
+Run analysis:
+
+```bash
+python -m scripts.analyze
+```
+
+---
+
+## 📊 Example output
+
+```
+Searching for TP53...
+Selected RefSeq: NM_001407264.1
+
+Length: 2522 bp  
+GC Content: 52.78%
+
+Protein (longest ORF):
+MEPCISQTAFRVTAMEEPQSDPSVEPPLSQETFSDLWKLLPENNVLSPL...
+```
+
+---
+
+## 🧠 What I learned
+
+* Working with real biological data (NCBI)
+* API usage in Python (Biopython Entrez)
+* Sequence analysis and interpretation
+* Open Reading Frame (ORF) detection
+* Building CLI-based tools
+* Structuring a real-world project
+
+---
 
 ## Author
 
-Aadya | BSc Biotechnology student  
-Building at the intersection of biology and code  
-github.com/aadya2909
+Aadya — BSc Biotechnology student
+Exploring the intersection of biology, data, and code
+
+GitHub: https://github.com/aadya2909
