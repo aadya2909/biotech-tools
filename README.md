@@ -40,6 +40,13 @@ python -m scripts.analyze
 Run KRAS cancer mutation analysis:
 python -m scripts.kras_analyzer
 
+## CLI Usage
+
+Fetch and analyze any gene in one command:
+python -m scripts.cli --gene TP53
+python -m scripts.cli --gene BRCA1
+python -m scripts.cli --gene KRAS
+
 ## Example output
 
 Gene: PZ086170.1
