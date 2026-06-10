@@ -1,6 +1,7 @@
 import argparse
 from src.ncbi.fetch import fetch_gene
 from src.ncbi.search import search_gene
+from scripts import analyze
 
 def main():
     parser = argparse.ArgumentParser(description="Gene Fetch Tool")
@@ -13,7 +14,6 @@ def main():
     )
 
     args = parser.parse_args()
-
     gene_name = args.gene
 
     print(f"Searching for {gene_name}...")
@@ -35,14 +35,7 @@ def main():
 
         print(f"\nSaved to {filename}")
 
-        # Analysis
-        sequence = record.seq
-        length = len(sequence)
-        gc_content = (sequence.count("G") + sequence.count("C")) / length * 100
-
-        print("\n--- Analysis ---")
-        print("Length:", length)
-        print("GC Content:", round(gc_content, 2), "%")
+        analyze.analyze_sequence(str(record.seq), record.id)
 
     else:
         print("Gene not found.")

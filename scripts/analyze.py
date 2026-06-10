@@ -17,54 +17,39 @@ codon_table = {
     'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
 }
 
+def analyze_sequence(sequence, gene_id):
+    sequence = sequence.upper()
 
-from Bio import SeqIO
+    print(f"\n--- Full Analysis: {gene_id} ---")
+    print(f"Length: {len(sequence)} bp")
 
-record = SeqIO.read("data/TP53.fasta", "fasta")
-sequence = str(record.seq).upper()
+    # Nucleotide counts
+    nucleotide_counts = {
+        "A": sequence.count("A"),
+        "T": sequence.count("T"),
+        "G": sequence.count("G"),
+        "C": sequence.count("C")
+    }
+    print("Nucleotide counts:")
+    for nucleotide, count in nucleotide_counts.items():
+        print(f"  {nucleotide}: {count}")
 
-print("Gene:", record.id)
-print("Length:", len(sequence), "bp")
+    # GC content
+    gc_content = (nucleotide_counts["G"] + nucleotide_counts["C"]) / len(sequence) * 100
+    print(f"GC Content: {gc_content:.2f}%")
 
-# Count nucleotides
-nucleotide_counts = {"A": sequence.count("A"),
-                     "T": sequence.count("T"),
-                     "G": sequence.count("G"),
-                     "C": sequence.count("C")}
+    # Start and stop codons
+    start_codons = [i for i in range(len(sequence) - 2) if sequence[i:i+3] == "ATG"]
+    stop_codon_positions = []
+    for stop in ["TAA", "TAG", "TGA"]:
+        stop_codon_positions.extend([i for i in range(len(sequence) - 2) if sequence[i:i+3] == stop])
+    print(f"Start codons: {len(start_codons)} at positions {start_codons}")
+    print(f"Stop codons: {len(stop_codon_positions)} at positions {stop_codon_positions}")
 
-print("Nucleotide counts:")
-for nucleotide, count in nucleotide_counts.items():
-    print(f"{nucleotide}: {count}")
-
-# Calculate GC content
-gc_content = (nucleotide_counts["G"] + nucleotide_counts["C"]) / len(sequence) * 100
-print(f"GC Content: {gc_content:.2f}%")
-
-# Codon analysis 
-codons = [sequence[i:i+3] for i in range(0, len(sequence) - 2, 3)]
-print(f"Total codons: {len(codons)}")
-print("Codons:")
-for codon in codons:
-    print(codon)
-
-# Find start codons (ATG)
-start_codons = [i for i in range(len(sequence) - 2) if sequence[i:i+3] == "ATG"]
-print(f"Start codons found: {len(start_codons)} at positions: {start_codons}")
-
-# Find stop codons 
-stop_codons = ["TAA", "TAG", "TGA"]
-stop_codon_positions = []
-for stop_codon in stop_codons:
-    positions = [i for i in range(len(sequence) - 2) if sequence[i:i+3] == stop_codon]
-    stop_codon_positions.extend(positions)
-print(f"Stop codons found: {len(stop_codon_positions)} at positions: {stop_codon_positions}") 
-
-
-protein = ""
-for i in range(0, len(sequence), 3):
-    codon = sequence[i:i+3]
-    if len(codon) == 3:
-        amino_acid =  codon_table.get(codon, '?')
-        protein = protein + amino_acid
-
-print("Protein:", protein)
+    # Protein translation
+    protein = ""
+    for i in range(0, len(sequence), 3):
+        codon = sequence[i:i+3]
+        if len(codon) == 3:
+            protein += codon_table.get(codon, '?')
+    print(f"Protein: {protein}")
