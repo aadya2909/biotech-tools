@@ -4,7 +4,7 @@ A Python-based bioinformatics pipeline for gene sequence analysis, protein trans
 
 ---
 
-## 🧬 What this project does
+##  What this project does
 
 This project explores how computational biology works in practice — not just theory.
 
@@ -22,19 +22,19 @@ Everything here is built step-by-step while learning both Python and bioinformat
 
 ---
 
-## ⚙️ Features
+##  Features
 
-* 🔍 Gene search using NCBI Entrez API
-* 🧬 Automatic RefSeq (NM_) filtering
-* 📊 Sequence analysis (length, GC%, nucleotide counts)
-* 🧪 Start/stop codon detection
-* 🧠 Longest ORF detection (biologically meaningful protein)
-* 💻 CLI support for single and multiple genes
-* 💾 FASTA file export
+*  Gene search using NCBI Entrez API
+*  Automatic RefSeq (NM_) filtering
+*  Sequence analysis (length, GC%, nucleotide counts)
+*  Start/stop codon detection
+*  Longest ORF detection (biologically meaningful protein)
+*  CLI support for single and multiple genes
+*  FASTA file export
 
 ---
 
-## 📁 Project structure
+##  Project structure
 
 biotech-tools/
 ├── data/                  # Saved FASTA sequences
@@ -51,7 +51,7 @@ biotech-tools/
 
 ---
 
-## 🛠️ Installation
+##  Installation
 
 ```bash
 pip install -r requirements.txt
@@ -59,7 +59,7 @@ pip install -r requirements.txt
 
 ---
 
-## 🚀 Usage
+##  Usage
 
 ### CLI (recommended)
 
@@ -88,7 +88,7 @@ python -m scripts.analyze
 
 ---
 
-## 📊 Example output
+##  Example output
 
 ```
 Searching for TP53...
@@ -103,7 +103,7 @@ MEPCISQTAFRVTAMEEPQSDPSVEPPLSQETFSDLWKLLPENNVLSPL...
 
 ---
 
-## 🧠 What I learned
+##  What I learned
 
 * Working with real biological data (NCBI)
 * API usage in Python (Biopython Entrez)
