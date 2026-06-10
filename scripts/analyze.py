@@ -46,10 +46,30 @@ def analyze_sequence(sequence, gene_id):
     print(f"Start codons: {len(start_codons)} at positions {start_codons}")
     print(f"Stop codons: {len(stop_codon_positions)} at positions {stop_codon_positions}")
 
-    # Protein translation
-    protein = ""
-    for i in range(0, len(sequence), 3):
-        codon = sequence[i:i+3]
-        if len(codon) == 3:
-            protein += codon_table.get(codon, '?')
-    print(f"Protein: {protein}")
+    # Protein translation (find longest ORF)
+    longest_protein = ""
+    for i in range(len(sequence) - 2):
+        if sequence[i:i+3] == "ATG":
+            protein = ""
+
+            for j in range(i, len(sequence), 3):
+                codon = sequence[j:j+3]
+
+                if len(codon) < 3:
+                    break
+
+                amino_acid = codon_table.get(codon, '?')
+
+                if amino_acid == "*":
+                    break
+
+                protein += amino_acid
+
+            # keep longest protein
+            if len(protein) > len(longest_protein):
+                longest_protein = protein
+
+    if longest_protein:
+        print(f"Protein (longest ORF): {longest_protein}")
+    else:
+        print("No valid protein found")
