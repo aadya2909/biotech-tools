@@ -1,5 +1,8 @@
 # biotech-tools
 
+![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+
 A Python-based bioinformatics pipeline for gene sequence analysis, protein translation, and basic ORF detection using real NCBI data.
 
 ---
