@@ -37,21 +37,27 @@ Everything here is built step-by-step while learning both Python and bioinformat
 
 ---
 
-##  Project structure
-
+## Project structure
+```
 biotech-tools/
-├── data/                  # Saved FASTA sequences
+├── data/ # Saved FASTA sequences
+│ ├── BRCA1.fasta
+│ ├── KRAS.fasta
+│ └── TP53.fasta
 ├── scripts/
-│   ├── cli.py             # Main CLI tool
-│   ├── fetch_gene.py      # Basic gene fetch script
-│   ├── analyze.py         # Sequence analysis + ORF translation
-│   ├── p53_analyzer.py    # TP53-specific analysis
-│   └── kras_analyzer.py   # KRAS mutation analysis
-├── src/ncbi/
-│   ├── fetch.py           # Fetch sequences from NCBI
-│   └── search.py          # Search gene IDs from NCBI
-└── requirements.txt
-
+│ ├── cli.py # Main CLI tool
+│ ├── fetch_gene.py # Basic gene fetch script
+│ ├── analyze.py # Sequence analysis + ORF translation
+│ ├── p53_analyzer.py # TP53-specific analysis
+│ └── kras_analyzer.py # KRAS mutation analysis
+├── src/
+│ └── ncbi/
+│ ├── fetch.py # Fetch sequences from NCBI
+│ └── search.py # Search gene IDs from NCBI
+├── README.md
+├── requirements.txt
+└── .gitignore
+```
 ---
 
 ##  Installation
