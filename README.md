@@ -88,6 +88,8 @@ python -m scripts.cli --genes TP53 KRAS BRCA1
 ### GC Content Comparison Across Cancer Genes
 ![GC Content](data/gc_content_comparison.png)
 
+KRAS shows significantly lower GC content compared to other cancer-associated genes, which may reflect differences in genomic structure or mutation susceptibility.
+
 
 ### Basic scripts
 
