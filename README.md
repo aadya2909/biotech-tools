@@ -83,6 +83,12 @@ python -m scripts.cli --genes TP53 KRAS BRCA1
 
 ---
 
+## Visualizations
+
+### GC Content Comparison Across Cancer Genes
+![GC Content](data/gc_content_comparison.png)
+
+
 ### Basic scripts
 
 Fetch gene manually:
