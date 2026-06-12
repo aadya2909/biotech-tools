@@ -8,16 +8,27 @@ def plot_gc_content(gene_names):
 
     for gene_name in gene_names:
         print(f"Fetching {gene_name}...")
-        gene_id = search_gene(gene_name)
-        if gene_id:
-            record = fetch_gene(gene_id)
-            sequence = str(record.seq).upper()
-            gc = (sequence.count("G") + sequence.count("C")) / len(sequence) * 100
-            genes.append(gene_name)
-            gc_values.append(round(gc, 2))
-            print(f"{gene_name}: {round(gc, 2)}%")
+        ids = search_gene(gene_name)
+
+        if ids:
+            record = fetch_gene(ids)
+            if record:
+                sequence = str(record.seq).upper()
+                if sequence:
+                    gc = (sequence.count("G") + sequence.count("C")) / len(sequence) * 100
+                    genes.append(gene_name)
+                    gc_values.append(round(gc, 2))
+                    print(f"{gene_name}: {round(gc, 2)}%")
+                else:
+                    print(f"{gene_name}: sequence is empty")
+            else:
+                print(f"{gene_name}: no valid sequence found")
         else:
             print(f"{gene_name}: not found")
+
+    if not genes:
+        print("No valid gene sequences found. Plot will not be generated.")
+        return
 
     # Plot
     fig, ax = plt.subplots(figsize=(10, 6))
