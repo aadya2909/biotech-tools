@@ -1,3 +1,5 @@
+from src.mutations.known_mutations import KNOWN_MUTATIONS
+
 codon_table = {
     'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
     'CTT': 'L', 'CTC': 'L', 'CTA': 'L', 'CTG': 'L',
@@ -30,24 +32,28 @@ def analyze_sequence(sequence, gene_id):
         "G": sequence.count("G"),
         "C": sequence.count("C")
     }
+
     print("Nucleotide counts:")
-    for nucleotide, count in nucleotide_counts.items():
-        print(f"  {nucleotide}: {count}")
+    for n, count in nucleotide_counts.items():
+        print(f"  {n}: {count}")
 
     # GC content
     gc_content = (nucleotide_counts["G"] + nucleotide_counts["C"]) / len(sequence) * 100
     print(f"GC Content: {gc_content:.2f}%")
 
-    # Start and stop codons
+    # Start & stop codons
     start_codons = [i for i in range(len(sequence) - 2) if sequence[i:i+3] == "ATG"]
-    stop_codon_positions = []
-    for stop in ["TAA", "TAG", "TGA"]:
-        stop_codon_positions.extend([i for i in range(len(sequence) - 2) if sequence[i:i+3] == stop])
-    print(f"Start codons: {len(start_codons)} at positions {start_codons}")
-    print(f"Stop codons: {len(stop_codon_positions)} at positions {stop_codon_positions}")
 
-    # Protein translation (find longest ORF)
+    stop_positions = []
+    for stop in ["TAA", "TAG", "TGA"]:
+        stop_positions.extend([i for i in range(len(sequence) - 2) if sequence[i:i+3] == stop])
+
+    print(f"Start codons: {len(start_codons)} at positions {start_codons}")
+    print(f"Stop codons: {len(stop_positions)} at positions {stop_positions}")
+
+    # ORF detection
     longest_protein = ""
+
     for i in range(len(sequence) - 2):
         if sequence[i:i+3] == "ATG":
             protein = ""
@@ -58,18 +64,55 @@ def analyze_sequence(sequence, gene_id):
                 if len(codon) < 3:
                     break
 
-                amino_acid = codon_table.get(codon, '?')
+                aa = codon_table.get(codon, "?")
 
-                if amino_acid == "*":
+                if aa == "*":
                     break
 
-                protein += amino_acid
+                protein += aa
 
-            # keep longest protein
             if len(protein) > len(longest_protein):
                 longest_protein = protein
 
+    # ✅ IMPORTANT: inside function
     if longest_protein:
         print(f"Protein (longest ORF): {longest_protein}")
+
+        # ✅ call helper function here
+        detect_known_mutations(longest_protein, gene_id.split('.')[0])
+
     else:
         print("No valid protein found")
+
+
+# ✅ HELPER FUNCTION (OUTSIDE, AT END)
+def detect_known_mutations(protein, gene_name):
+    print("\n--- Known Mutation Check ---")
+
+    if gene_name not in KNOWN_MUTATIONS:
+        print("No mutation data available for this gene")
+        return
+
+    mutations = KNOWN_MUTATIONS[gene_name]
+
+    for m in mutations:
+        pos = m["position"]
+        expected = m["original"]
+        mutated = m["mutated"]
+
+        if len(protein) < pos:
+            continue
+
+        actual = protein[pos - 1]  # biology → python index
+
+        if actual == expected:
+            print(f"{m['name']}: Normal ({expected} at position {pos})")
+
+        elif actual == mutated:
+            print(f"{m['name']}: ⚠️ Mutation detected!")
+            print(f"  Change: {expected} → {mutated}")
+            print(f"  Type: {m['type']}")
+            print(f"  Info: {m['info']}")
+
+        else:
+            print(f"{m['name']}: Different variant ({expected} → {actual})")

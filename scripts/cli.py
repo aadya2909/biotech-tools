@@ -56,7 +56,7 @@ def main():
             print(f"Saved to {filename}")
 
             # Analyze
-            analyze.analyze_sequence(str(record.seq), record.id)
+            analyze.analyze_sequence(str(record.seq), gene_name)
 
         else:
             print("No valid sequence found.")
