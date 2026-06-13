@@ -1,4 +1,5 @@
 from src.mutations.known_mutations import KNOWN_MUTATIONS
+import os
 
 codon_table = {
     'TTT': 'F', 'TTC': 'F', 'TTA': 'L', 'TTG': 'L',
@@ -79,7 +80,8 @@ def analyze_sequence(sequence, gene_id):
         print(f"Protein (longest ORF): {longest_protein}")
 
         # ✅ call helper function here
-        detect_known_mutations(longest_protein, gene_id.split('.')[0])
+        mutation_results = detect_known_mutations(longest_protein, gene_id.split('.')[0])
+        save_mutation_report(gene_id.split('.')[0], longest_protein, mutation_results) 
 
     else:
         print("No valid protein found")
@@ -89,9 +91,12 @@ def analyze_sequence(sequence, gene_id):
 def detect_known_mutations(protein, gene_name):
     print("\n--- Known Mutation Check ---")
 
+    results = []
+
     if gene_name not in KNOWN_MUTATIONS:
-        print("No mutation data available for this gene")
-        return
+        message = "No mutation data available for this gene"
+        print(message)
+        return results
 
     mutations = KNOWN_MUTATIONS[gene_name]
 
@@ -101,18 +106,76 @@ def detect_known_mutations(protein, gene_name):
         mutated = m["mutated"]
 
         if len(protein) < pos:
+            result = {
+                "name": m["name"],
+                "position": pos,
+                "status": "Protein too short",
+                "expected": expected,
+                "observed": None,
+                "mutated": mutated,
+                "type": m["type"],
+                "info": m["info"]
+            }
+            results.append(result)
             continue
 
-        actual = protein[pos - 1]  # biology → python index
+        actual = protein[pos - 1]
 
         if actual == expected:
+            status = "Normal"
             print(f"{m['name']}: Normal ({expected} at position {pos})")
 
         elif actual == mutated:
+            status = "Mutation detected"
             print(f"{m['name']}: ⚠️ Mutation detected!")
             print(f"  Change: {expected} → {mutated}")
             print(f"  Type: {m['type']}")
             print(f"  Info: {m['info']}")
 
         else:
+            status = "Different variant"
             print(f"{m['name']}: Different variant ({expected} → {actual})")
+
+        result = {
+            "name": m["name"],
+            "position": pos,
+            "status": status,
+            "expected": expected,
+            "observed": actual,
+            "mutated": mutated,
+            "type": m["type"],
+            "info": m["info"]
+        }
+
+        results.append(result)
+
+    return results
+
+def save_mutation_report(gene_name, protein, mutation_results):
+    os.makedirs("reports", exist_ok=True)
+    filename = f"reports/{gene_name}_mutation_report.txt"
+
+    detected = sum(1 for r in mutation_results if r["status"] == "Mutation detected")
+    different = sum(1 for r in mutation_results if r["status"] == "Different variant")
+
+    with open(filename, "w") as f:
+        f.write("=== Mutation Analysis Report ===\n\n")
+        f.write(f"Gene: {gene_name}\n")
+        f.write(f"Protein length: {len(protein)} aa\n")
+        f.write(f"Known mutation sites checked: {len(mutation_results)}\n\n")
+
+        for r in mutation_results:
+            f.write(f"{r['name']}:\n")
+            f.write(f"  Position: {r['position']}\n")
+            f.write(f"  Expected: {r['expected']}\n")
+            f.write(f"  Observed: {r['observed']}\n")
+            f.write(f"  Known mutation: {r['mutated']}\n")
+            f.write(f"  Status: {r['status']}\n")
+            f.write(f"  Type: {r['type']}\n")
+            f.write(f"  Info: {r['info']}\n\n")
+
+        f.write("Summary:\n")
+        f.write(f"  Known mutations detected: {detected}\n")
+        f.write(f"  Different variants found: {different}\n")
+
+    print(f"\nMutation report saved to {filename}")

@@ -1,0 +1,27 @@
+=== Mutation Analysis Report ===
+
+Gene: TP53
+Protein length: 407 aa
+Known mutation sites checked: 2
+
+R175H:
+  Position: 175
+  Expected: R
+  Observed: A
+  Known mutation: H
+  Status: Different variant
+  Type: Missense
+  Info: Common tumor suppressor mutation
+
+R248Q:
+  Position: 248
+  Expected: R
+  Observed: Y
+  Known mutation: Q
+  Status: Different variant
+  Type: Missense
+  Info: DNA-binding domain mutation
+
+Summary:
+  Known mutations detected: 0
+  Different variants found: 2
