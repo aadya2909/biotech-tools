@@ -74,17 +74,39 @@ def analyze_sequence(sequence, gene_id):
 
             if len(protein) > len(longest_protein):
                 longest_protein = protein
+    # If we found a protein, analyze mutations and save report
+    gene_name = gene_id.split('.')[0]
 
-    # ✅ IMPORTANT: inside function
     if longest_protein:
         print(f"Protein (longest ORF): {longest_protein}")
 
-        # ✅ call helper function here
-        mutation_results = detect_known_mutations(longest_protein, gene_id.split('.')[0])
-        save_mutation_report(gene_id.split('.')[0], longest_protein, mutation_results) 
+        mutation_results = detect_known_mutations(longest_protein, gene_name)
+        save_mutation_report(gene_name, longest_protein, mutation_results)
 
-    else:
-        print("No valid protein found")
+        detected = sum(1 for r in mutation_results if r["status"] == "Mutation detected")
+        different = sum(1 for r in mutation_results if r["status"] == "Different variant")
+
+        return {
+            "gene": gene_name,
+            "sequence_length": len(sequence),
+            "protein_length": len(longest_protein),
+            "gc_content": round(gc_content, 2),
+            "known_sites_checked": len(mutation_results),
+            "mutations_detected": detected,
+            "different_variants": different
+        }
+
+    # No valid protein found
+    print("No valid protein found")
+    return {
+        "gene": gene_name,
+        "sequence_length": len(sequence),
+        "protein_length": 0,
+        "gc_content": round(gc_content, 2),
+        "known_sites_checked": 0,
+        "mutations_detected": 0,
+        "different_variants": 0
+    }
 
 
 # ✅ HELPER FUNCTION (OUTSIDE, AT END)

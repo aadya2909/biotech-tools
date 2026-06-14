@@ -1,7 +1,32 @@
 import argparse
+import csv
+import os
+
 from src.ncbi.fetch import fetch_gene
 from src.ncbi.search import search_gene
 from scripts import analyze
+
+def save_summary_csv(summaries):
+    os.makedirs("reports", exist_ok=True)
+
+    filename = "reports/mutation_summary.csv"
+
+    fieldnames = [
+        "gene",
+        "sequence_length",
+        "protein_length",
+        "gc_content",
+        "known_sites_checked",
+        "mutations_detected",
+        "different_variants"
+    ]
+
+    with open(filename, "w", newline="") as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(summaries)
+
+    print(f"\nCSV summary saved to {filename}")
 
 
 def main():
@@ -34,6 +59,8 @@ def main():
         print("Please provide --gene or --genes")
         return
 
+    summaries = []
+    
     # Process each gene
     for gene_name in gene_list:
         print(f"\nSearching for {gene_name}...")
@@ -56,11 +83,16 @@ def main():
             print(f"Saved to {filename}")
 
             # Analyze
-            analyze.analyze_sequence(str(record.seq), gene_name)
+            summary = analyze.analyze_sequence(str(record.seq), gene_name)
+
+        if summary:
+         summaries.append(summary)
 
         else:
             print("No valid sequence found.")
 
+            if summaries:
+             save_summary_csv(summaries)
 
 if __name__ == "__main__":
     main()

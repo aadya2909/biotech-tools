@@ -1,0 +1,18 @@
+=== Mutation Analysis Report ===
+
+Gene: KRAS
+Protein length: 189 aa
+Known mutation sites checked: 1
+
+G12D:
+  Position: 12
+  Expected: G
+  Observed: G
+  Known mutation: D
+  Status: Normal
+  Type: Missense
+  Info: Oncogenic driver mutation
+
+Summary:
+  Known mutations detected: 0
+  Different variants found: 0

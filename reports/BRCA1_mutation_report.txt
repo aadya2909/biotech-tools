@@ -1,0 +1,9 @@
+=== Mutation Analysis Report ===
+
+Gene: BRCA1
+Protein length: 712 aa
+Known mutation sites checked: 0
+
+Summary:
+  Known mutations detected: 0
+  Different variants found: 0
