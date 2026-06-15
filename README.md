@@ -201,6 +201,7 @@ Summary:
 
 The project includes a visualization script for comparing GC content across selected cancer-associated genes.
 
+
 Run:
 
 ```bash
@@ -210,7 +211,7 @@ python -m scripts.visualize
 Output:
 
 ```text
-data/gc_content_comparison.png
+![GC content comparison across selected cancer-associated genes](data/gc_content_comparison.png)
 ```
 
 ## Current mutation database
