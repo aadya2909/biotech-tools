@@ -4,6 +4,7 @@ import os
 
 from src.ncbi.fetch import fetch_gene
 from src.ncbi.search import search_gene
+from src.ncbi.cds import fetch_genbank_record, extract_cds_info
 from scripts import analyze
 
 def save_summary_csv(summaries):
@@ -12,14 +13,15 @@ def save_summary_csv(summaries):
     filename = "reports/mutation_summary.csv"
 
     fieldnames = [
-        "gene",
-        "sequence_length",
-        "protein_length",
-        "gc_content",
-        "known_sites_checked",
-        "mutations_detected",
-        "different_variants"
-    ]
+    "gene",
+    "sequence_length",
+    "protein_length",
+    "protein_source",
+    "gc_content",
+    "known_sites_checked",
+    "mutations_detected",
+    "different_variants"
+]
 
     with open(filename, "w", newline="") as f:
         writer = csv.DictWriter(f, fieldnames=fieldnames)
@@ -83,16 +85,34 @@ def main():
             print(f"Saved to {filename}")
 
             # Analyze
-            summary = analyze.analyze_sequence(str(record.seq), gene_name)
+            official_protein = None
+            # Try to get annotated CDS protein from GenBank
+            genbank_record = fetch_genbank_record(id_list)
 
-        if summary:
-         summaries.append(summary)
+            if genbank_record:
+                cds_info = extract_cds_info(genbank_record)
 
-        else:
-            print("No valid sequence found.")
+                if cds_info and cds_info.get("protein"):
+                    official_protein = cds_info["protein"]
+                    print("\nUsing annotated CDS protein for mutation analysis.")
+                else:
+                    print("\nNo CDS protein found. Falling back to longest ORF.")
 
-            if summaries:
-             save_summary_csv(summaries)
+            summary = analyze.analyze_sequence(
+                str(record.seq),
+                gene_name,
+                official_protein=official_protein
+            )
+
+            if summary:
+                summaries.append(summary)
+            else:
+                print("No valid sequence found.")
+
+    # End for gene_list
+
+    if summaries:
+        save_summary_csv(summaries)
 
 if __name__ == "__main__":
     main()

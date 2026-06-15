@@ -1,0 +1,2 @@
+gene,sequence_length,protein_length,protein_source,gc_content,known_sites_checked,mutations_detected,different_variants
+TP53,2522,393,Annotated CDS protein,52.78,2,0,0

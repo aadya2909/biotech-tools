@@ -20,7 +20,7 @@ codon_table = {
     'GGT': 'G', 'GGC': 'G', 'GGA': 'G', 'GGG': 'G',
 }
 
-def analyze_sequence(sequence, gene_id):
+def analyze_sequence(sequence, gene_id, official_protein=None):
     sequence = sequence.upper()
 
     print(f"\n--- Full Analysis: {gene_id} ---")
@@ -74,38 +74,53 @@ def analyze_sequence(sequence, gene_id):
 
             if len(protein) > len(longest_protein):
                 longest_protein = protein
-    # If we found a protein, analyze mutations and save report
+    # finalize gene name
     gene_name = gene_id.split('.')[0]
 
-    if longest_protein:
-        print(f"Protein (longest ORF): {longest_protein}")
+    # choose protein to analyze
+    if official_protein:
+        protein_to_analyze = official_protein
+        protein_source = "Annotated CDS protein"
+        print(f"Protein source: {protein_source}")
+        print(f"Protein length: {len(protein_to_analyze)} aa")
+        print(f"Protein preview: {protein_to_analyze[:80]}")
 
-        mutation_results = detect_known_mutations(longest_protein, gene_name)
-        save_mutation_report(gene_name, longest_protein, mutation_results)
+    elif longest_protein:
+        protein_to_analyze = longest_protein
+        protein_source = "Longest ORF"
+        print(f"Protein source: {protein_source}")
+        print(f"Protein length: {len(protein_to_analyze)} aa")
+        print(f"Protein preview: {protein_to_analyze[:80]}")
 
-        detected = sum(1 for r in mutation_results if r["status"] == "Mutation detected")
-        different = sum(1 for r in mutation_results if r["status"] == "Different variant")
-
+    else:
+        print("No valid protein found")
         return {
             "gene": gene_name,
             "sequence_length": len(sequence),
-            "protein_length": len(longest_protein),
+            "protein_length": 0,
+            "protein_source": "None",
             "gc_content": round(gc_content, 2),
-            "known_sites_checked": len(mutation_results),
-            "mutations_detected": detected,
-            "different_variants": different
+            "known_sites_checked": 0,
+            "mutations_detected": 0,
+            "different_variants": 0
         }
 
-    # No valid protein found
-    print("No valid protein found")
+    # If we have a protein, check known mutations and save report
+    mutation_results = detect_known_mutations(protein_to_analyze, gene_name)
+    save_mutation_report(gene_name, protein_to_analyze, mutation_results)
+
+    detected = sum(1 for r in mutation_results if r["status"] == "Mutation detected")
+    different = sum(1 for r in mutation_results if r["status"] == "Different variant")
+
     return {
         "gene": gene_name,
         "sequence_length": len(sequence),
-        "protein_length": 0,
+        "protein_length": len(protein_to_analyze),
+        "protein_source": protein_source,
         "gc_content": round(gc_content, 2),
-        "known_sites_checked": 0,
-        "mutations_detected": 0,
-        "different_variants": 0
+        "known_sites_checked": len(mutation_results),
+        "mutations_detected": detected,
+        "different_variants": different
     }
 
 
