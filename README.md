@@ -199,6 +199,8 @@ Summary:
 
 ## Visualization
 
+![GC content comparison across cancer-associated genes](./data/gc_content_comparison.png)
+
 The project includes a visualization script for comparing GC content across selected cancer-associated genes.
 
 
@@ -211,7 +213,7 @@ python -m scripts.visualize
 Output:
 
 ```text
-![GC content comparison across selected cancer-associated genes](data/gc_content_comparison.png)
+data/gc_content_comparison.png
 ```
 
 ## Current mutation database
