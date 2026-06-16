@@ -94,6 +94,8 @@ biotech-tools/
 └── .gitignore
 ```
 
+Additional concept notes are available in [`docs/concepts.md`](docs/concepts.md).
+
 ## Installation
 
 Clone the repository:
@@ -230,6 +232,7 @@ src/mutations/known_mutations.py
 ```
 
 This can be expanded in future versions with more genes, mutation annotations, and external references.
+
 
 ## Limitations
 
